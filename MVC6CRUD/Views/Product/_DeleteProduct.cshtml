@@ -1,0 +1,46 @@
+﻿@model ProductViewModel
+
+<div class="modal fade" role="dialog" id="openDeleteModal-@Model.Id" aria-labelledby="deleteCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCategoryLabel">Delete Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <sapn aria-hidden="true">&times;</sapn>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="DeleteProduct" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="card" style="width: auto;">
+                        <img src="@Model.ProductImage" class="rounded" alt="@Model.ProductImage" width="150" height="100">
+                        <div class="card-body">
+                            <h5 class="card-title">@Model.ProductName</h5>
+                            <p class="card-text">@Model.Description</p>
+                            <p class="card-text"> <strong>Price:</strong>@Model.Price</p>
+                            <p class="card-text"><strong>Color:</strong>@Model.Color</p>
+                        </div>
+                        <div class="modal-body form-horizontal">
+                            Are you want to delete @Model.ProductName?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="submit" class="btn btn-primary">Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

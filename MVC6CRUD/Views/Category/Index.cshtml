@@ -1,0 +1,105 @@
+﻿@model PaginatedList<CategoryViewModel>
+@{
+    ViewData["Title"] = "Category List";
+}
+
+<h1 class="text-center">@ViewData["Title"]</h1>
+<hr />
+<form asp-action="Index" method="get">
+    <div class="row">
+        <div class="col-md-8">
+            <input type="text" name="SearchString" placeholder="Search by Name" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <input type="submit" value="Search" class="btn btn-info" />
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-md-12">
+        &nbsp;
+    </div>
+    <div class="col-md-12">
+        <button type="button" asp-controller="Category" data-toggle="modal" data-target="#openModal"
+                class="btn btn-primary mb-3">
+            Add Category
+        </button>
+    </div>
+</div>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr class="table-active">
+            <th>
+                Category Id
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Category Name</a>
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryName)
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" asp-controller="Category" data-toggle="modal" data-target="@("#openEditModal-"+item.CategoryId)" data-url="@Url.Action($"EditCategory/{item.CategoryId}")"
+                                    class="btn btn-success">
+                                Edit
+                            </button>
+                        </div>
+                        @await Html.PartialAsync("_EditCategory", item)
+                        <button type="button" asp-controller="Category" data-toggle="modal" data-target="@("#openDeleteModal-"+item.CategoryId)" data-url="@Url.Action($"DeleteCategory/{item.CategoryId}")"
+                                class="btn btn-danger">
+                            Delete
+                        </button>
+                        @await Html.PartialAsync("_DeleteCategory", item)
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">
+                    <div>No Category available at this moment!</div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+@await Html.PartialAsync("_AddCategory", new CategoryViewModel())
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

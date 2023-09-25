@@ -1,0 +1,148 @@
+﻿
+@model MVC6CRUD.Models.ProductListViewModel
+
+@{
+    ViewData["Title"] = "Product List";
+}
+
+
+<h1 class="text-center">@ViewData["Title"]</h1>
+<hr />
+<form asp-action="Index" method="get">
+    <div class="row">
+        <div class="col-md-8">
+            <input type="text" name="SearchString" placeholder="Search by Name" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <input type="submit" value="Search" class="btn btn-info" />
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-md-12">
+        &nbsp;
+    </div>
+    <div class="col-md-12">
+        <button type="button" asp-controller="Product" data-url="@Url.Action($"AddProduct")" data-toggle="modal" data-target="#openProductModal"
+                class="btn btn-primary mb-3">
+            Add Product by Popup
+        </button>
+        <a class="btn btn-primary mb-3" asp-area="" asp-controller="Product" asp-action="Create">Add Product by new page</a>
+    </div>
+</div>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr class="table-active">
+            <th>
+                Id
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@Model.ProductNameShortOrder" asp-route-currentFilter="@Model.SearchStrings">Product Name</a>
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Color
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@Model.CatograyNameShortOrder" asp-route-currentFilter="@Model.SearchStrings">Category Name</a>
+            </th>
+            <th>
+                ProductImage
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.ProductViewModels.Any())
+        {
+            @foreach (var item in Model.ProductViewModels)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Color)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryName)
+                    </td>
+                    <td>
+                        <img src="@item.ProductImage" class="rounded" height="80" width="100"
+                             asp-append-version="true" />
+                    </td>
+                    <td class="text-center">
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id"  class="btn btn-info">Edit Product</a>
+                        <button type="button" asp-controller="Product" data-toggle="modal" data-target="@("#editProductModal-"+item.Id)" data-url="@Url.Action($"EditProduct/{item.Id}")"
+                                class="btn btn-success">
+                            Edit
+                        </button>
+                        @await Html.PartialAsync("_EditProduct", item)
+                        <button type="button" asp-controller="Category" data-toggle="modal" data-target="@("#openDeleteModal-"+item.Id)" data-url="@Url.Action($"DeleteProduct/{item.Id}")"
+                                class="btn btn-danger">
+                            Delete
+                        </button>
+                        @await Html.PartialAsync("_DeleteProduct", item)
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">
+                    <div>No Product available at this moment!</div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-currentFilter="@Model.OrderBy" asp-route-pageNumber="@(Model.CurrentPage-1)" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        }
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <li class="page-item active"><a class="page-link" asp-action="Index" asp-route-currentFilter="@Model.OrderBy" asp-route-pageNumber="@i">@i</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-currentFilter="@Model.OrderBy" asp-route-pageNumber="@i">@i</a></li>
+            }
+        }
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" aria-label="Next" asp-action="Index" asp-route-currentFilter="@Model.OrderBy" asp-route-pageNumber="@(Model.CurrentPage+1)">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+@await Html.PartialAsync("_AddProduct", new ProductViewModel())
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
