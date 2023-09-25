@@ -16,7 +16,7 @@ builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+//Comment
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
