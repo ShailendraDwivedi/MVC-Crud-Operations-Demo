@@ -14,14 +14,14 @@ namespace MVC6CRUD.Data
         [MaxLength(100)]
         public string ProductName { get; set; }
         [Required]
-        [MaxLength(250)]
+        [MaxLength(500)]
         public string Description { get; set; }
         [Required]
         [MaxLength(50)]
         public string Color { get; set; }
         public int Price { get; set; }
         [Required]
-        [MaxLength(250)]
+        [MaxLength(350)]
         public string? Image { get; set; }
         [ForeignKey("Categories")]
         public long CategoryId { get; set; }

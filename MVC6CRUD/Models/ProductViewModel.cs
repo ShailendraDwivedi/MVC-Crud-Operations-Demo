@@ -24,14 +24,14 @@ namespace MVC6CRUD.Models
         public string? ProductImage { get; set; }
         [Required]
         [Display(Name = "Category Name")]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
         [Display(Name = "Category Name")]
         public string? CategoryName { get; set; }
         [Display(Name = "Added Date")]
         public DateTime AddedDate { get; set; }
         [Display(Name = "Modified Date")]
         public DateTime ModifiedDate { get; set; }
-        public IEnumerable<SelectListItem> Category { get; set; } = default!;      
+        public IEnumerable<SelectListItem>? Category { get; set; }     
         
     }
 }
