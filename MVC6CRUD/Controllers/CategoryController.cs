@@ -5,6 +5,9 @@ using MVC6CRUD.Repository;
 
 namespace MVC6CRUD.Controllers
 {
+    /// <summary>
+    /// Category Controller
+    /// </summary>
     public class CategoryController : Controller
     {
         private readonly IRepository<Category> _categoryRepository;
