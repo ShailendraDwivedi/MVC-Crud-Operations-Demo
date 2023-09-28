@@ -8,7 +8,7 @@ namespace MVC6CRUD.Models
         public Int64 CategoryId { get; set; }
         [Required]
         [Display(Name = "Category Name")]
-        public string CategoryName { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
         [Display(Name = "Added Date")]
         public DateTime AddedDate { get; set; }
         [Display(Name = "Modified Date")]

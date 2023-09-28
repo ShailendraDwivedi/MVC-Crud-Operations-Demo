@@ -106,20 +106,21 @@ namespace MVC6CRUD.Controllers
                 //    Text = c.CategoryName,
                 //    Value = c.Id.ToString()
                 //});
-                var product = new Product()
-                {
-                    ProductName = addProductViewModel.ProductName,
-                    Description = addProductViewModel.Description,
-                    Price = addProductViewModel.Price,
-                    Color = addProductViewModel.Color,
-                    CategoryId =Convert.ToInt64(addProductViewModel.CategoryId),
-                    Image = addProductViewModel.ProductImage
-                };
-                ModelState.Remove("Category");
                 if (ModelState.IsValid)
                 {
+                    Product product = new Product()
+                    {
+                        ProductName = addProductViewModel.ProductName,
+                        Description = addProductViewModel.Description,
+                        Price = addProductViewModel.Price,
+                        Color = addProductViewModel.Color,
+                        Image = addProductViewModel.ProductImage,
+                        CategoryId = Convert.ToInt64(addProductViewModel.CategoryId),                        
+                        AddedDate = DateTime.UtcNow,
+                        ModifiedDate = DateTime.UtcNow
+                    };
                     _productRepository.Insert(product);
-                    TempData["successMsg"] = "Product (" + product.ProductName + ") added successfully.";
+                    TempData["successMessage"] = "Product (" + product.ProductName + ") added successfully.";
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -138,6 +139,7 @@ namespace MVC6CRUD.Controllers
         public IActionResult EditProduct(int id)
         {
             var productToEdit = _productRepository.GetById(id);
+
             if (productToEdit != null)
             {
                 var productViewModel = new ProductViewModel()
@@ -146,7 +148,7 @@ namespace MVC6CRUD.Controllers
                     ProductName = productToEdit.ProductName,
                     Description = productToEdit.Description,
                     Price = productToEdit.Price,
-                    CategoryId =productToEdit.CategoryId.ToString(),
+                    CategoryId = (int)productToEdit.CategoryId,
                     Color = productToEdit.Color,
                     ProductImage = productToEdit.Image,
                     AddedDate = DateTime.Now,
@@ -155,13 +157,14 @@ namespace MVC6CRUD.Controllers
                     {
                         Text = c.CategoryName,
                         Value = c.Id.ToString()
-                    }),
+                    }).ToList()
+
                 };
-                return PartialView("_EditProduct.cshtml", productViewModel);
+                return PartialView("_EditProduct", productViewModel);
             }
             else
             {
-                return NotFound();
+                return PartialView("_EditProduct");
             }
         }
 
@@ -184,7 +187,7 @@ namespace MVC6CRUD.Controllers
                     Description = productViewModel.Description,
                     Price = productViewModel.Price,
                     Color = productViewModel.Color,
-                    CategoryId =Convert.ToInt64(productViewModel.CategoryId),
+                    CategoryId = Convert.ToInt64(productViewModel.CategoryId),
                     Image = productViewModel.ProductImage
                 };
                 ModelState.Remove("Category");
@@ -219,7 +222,7 @@ namespace MVC6CRUD.Controllers
                     ProductName = productToDelete.ProductName,
                     Description = productToDelete.Description,
                     Price = productToDelete.Price,
-                    CategoryId = productToDelete.CategoryId.ToString(),
+                    CategoryId = (int)productToDelete.CategoryId,
                     Color = productToDelete.Color,
                     ProductImage = productToDelete.Image,
                     Category = (IEnumerable<SelectListItem>)_categoryRepository.GetAll().Select(c => new SelectListItem()
@@ -284,7 +287,7 @@ namespace MVC6CRUD.Controllers
                     Description = addProductViewModel.Description,
                     Price = addProductViewModel.Price,
                     Color = addProductViewModel.Color,
-                    CategoryId =Convert.ToInt64(addProductViewModel.CategoryId),
+                    CategoryId = Convert.ToInt64(addProductViewModel.CategoryId),
                     Image = addProductViewModel.ProductImage
                 };
                 ModelState.Remove("Category");
@@ -317,7 +320,7 @@ namespace MVC6CRUD.Controllers
                     ProductName = productToEdit.ProductName,
                     Description = productToEdit.Description,
                     Price = productToEdit.Price,
-                    CategoryId = productToEdit.CategoryId.ToString(),
+                    CategoryId = (int)productToEdit.CategoryId,
                     Color = productToEdit.Color,
                     ProductImage = productToEdit.Image,
                     AddedDate = DateTime.Now,

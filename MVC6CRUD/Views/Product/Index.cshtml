@@ -86,7 +86,7 @@
                              asp-append-version="true" />
                     </td>
                     <td class="text-center">
-                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id"  class="btn btn-info">Edit Product</a>
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info">Edit Product</a>
                         <button type="button" asp-controller="Product" data-toggle="modal" data-target="@("#editProductModal-"+item.Id)" data-url="@Url.Action($"EditProduct/{item.Id}")"
                                 class="btn btn-success">
                             Edit
@@ -144,5 +144,6 @@
 </nav>
 @await Html.PartialAsync("_AddProduct", new ProductViewModel())
 @section Scripts {
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
